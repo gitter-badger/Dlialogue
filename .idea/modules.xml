@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/Dlialogue.iml" filepath="$PROJECT_DIR$/.idea/Dlialogue.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../TestsPreliminairesDLIAlogue/.idea/TestsPreliminairesDLIAlogue.iml" filepath="$PROJECT_DIR$/../TestsPreliminairesDLIAlogue/.idea/TestsPreliminairesDLIAlogue.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Utilitaires/.idea/Utilitaires.iml" filepath="$PROJECT_DIR$/../Utilitaires/.idea/Utilitaires.iml" />
+      <module fileurl="file://$PROJECT_DIR$/config/.idea/config.iml" filepath="$PROJECT_DIR$/config/.idea/config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/module/.idea/module.iml" filepath="$PROJECT_DIR$/module/.idea/module.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../premierTestPyZmq/.idea/premierTestPyZmq.iml" filepath="$PROJECT_DIR$/../premierTestPyZmq/.idea/premierTestPyZmq.iml" />
+      <module fileurl="file://$PROJECT_DIR$/resources/.idea/resources.iml" filepath="$PROJECT_DIR$/resources/.idea/resources.iml" />
+    </modules>
+  </component>
+</project>
