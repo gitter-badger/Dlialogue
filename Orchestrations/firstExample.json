@@ -1,0 +1,55 @@
+{
+    "orchestrationName": "firstExample",
+    "initialState": "messageInput",
+    "states": {
+        "messageInput": {
+            "parallelSubstates": [
+                "Pim",
+                "Pam"
+            ],
+            "ressourcesIn": [],
+            "conversionIn": "",
+            "worker": [
+                {
+                    "type": ["initiate","incrementTurn"]
+                },
+                "messageInputExample",
+                "local",
+                "ServiceWebInput.py"
+            ],
+            "conversionOut": "",
+            "ressourcesOut": [
+                "messageInput"
+            ],
+            "transitions": [
+                {
+                    "true": "messageOutput"
+                }
+            ]
+        },
+        "messageOutput": {
+            "parallelSubstates": [],
+            "ressourcesIn": [
+                "messageInput"
+            ],
+            "conversionIn": "",
+            "worker": [
+                {
+                    "type": []
+                },
+                "messageOutputExample",
+                "local",
+                "ServiceWebOutput.py"
+            ],
+            "conversionOut": "",
+            "ressourcesOut": [
+                ""
+            ],
+            "transitions": [
+                {
+                    "true": "messageInput"
+                }
+            ]
+        }
+    }
+}

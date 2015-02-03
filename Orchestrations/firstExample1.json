@@ -1,0 +1,36 @@
+{
+    "orchestrationName": "firstExample",
+    "initialState": "messageInput",
+    "states": {
+        "messageInput": {
+            "parallelSubstates": [
+                "Pim",
+                "Pam"
+            ],
+            "ressourcesIn": [],
+            "workerName": "messageInputExample",
+            "ressourcesOut": [
+                "messageInput"
+            ],
+            "transitions": [
+
+                {
+                    "true": "messageOutput"
+                }
+            ]
+        },
+        "messageOutput": {
+            "parallelSubstates": [],
+            "ressourcesIn": [
+                "messageInput"
+            ],
+            "workerName": "messageOutputExample",
+            "ressourcesOut": [
+                ""
+            ],
+            "transitions": [
+                {}
+            ]
+        }
+    }
+}
