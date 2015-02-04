@@ -4,7 +4,7 @@ import zmq
 import json
 from collections import defaultdict
 from threading import Thread
-from PlateForme.Encapsulation import EncapsulateurExempleOutput, EncapsulateurExempleInput, Hub
+from PlateForme.Encapsulation import EncapsulatorWithoutInitiative, EncapsulatorWithInitiative, Hub
 
 #Orchestrations Management : add/check/modify/delete
 #Local Services Management : add/check/modify/delete
@@ -14,7 +14,8 @@ from PlateForme.Encapsulation import EncapsulateurExempleOutput, EncapsulateurEx
 forbiddenPorts = ["8080","80","22"]
 global idDialogueIncrement
 idDialogueIncrement = int()
-# orchestrations = {"orchestrationName":"jsonOrchestrationObject"}
+orchestrations = {}
+#orchestrations = {"orchestrationName":"jsonOrchestrationObject"}
 threadsByOrchestration = {"orchestrationName":["threads"]}
 
 directory = defaultdict(tuple)
@@ -45,14 +46,14 @@ def initialization():
 def giveNewEncapsulatorsPorts(orchestrationEncapsulatorsDefaultDict):
     '''Ports not already in the global directory are added to it'''
      #arbitrary port
-    givenPort = "273"
-    for encapsulator in orchestrationEncapsulatorsDefaultDict :
-        if encapsulator not in directory :
-            while givenPort in list(directory.values) or givenPort in forbiddenPorts:
-                print(givenPort)
-                givenPort+=1
-                print(givenPort)
-            directory[encapsulator] = givenPort
+    # givenPort = "273"
+    # for encapsulator in orchestrationEncapsulatorsDefaultDict :
+    #     if encapsulator not in directory :
+    #         while (givenPort in list(directory.values) or givenPort in forbiddenPorts):
+    #             print(givenPort)
+    #             givenPort+=1
+    #             print(givenPort)
+    #         directory[encapsulator] = givenPort
 
 def createEncapsulatorsDict(orchestration):
     '''gives this orchestration's encapsulators dict with triplet [conversionIn,address,conversionOut]  and boolean
@@ -66,8 +67,8 @@ def createEncapsulatorsDict(orchestration):
         if 1 :
             conversionIn = "_"
         else:
-            conversionIn = ""
-        conversionOut = ""
+            conversionIn = "_"
+        conversionOut = "_"
         encapsulatorTuple = (conversionIn,workerAddress,conversionOut)
         if 'initiate' in orchestration["states"][state]["worker"]["type"]:
             encapsulatorsDict[encapsulatorTuple] = True
@@ -80,18 +81,31 @@ def StartOrchestration(orchestration):
     context = zmq.Context()
     encapsulatorsDict = createEncapsulatorsDict(orchestration)
     giveNewEncapsulatorsPorts(encapsulatorsDict)
-    #FR : On crée les threads pour les workers locaux et le hub.
+
     print(list(directory.keys()))
     print(list(directory.values()))
+
+    #Threads Creation
+
+    orchestrationThreads = set()
+    semiThread = EncapsulatorWithoutInitiative(context, 1, 2, "semiAddress")
+
+
+    semi
+    semout
+    dman_start
+    dman_update
+    dman_stop
+
+    clientWeb
+
+    EncapsulatorWithoutInitiative()
     threads = {}
 
-    #FR : On démarre les threads en terminant par les 'initiate'.
+    #Threads launching, hub first, initiative last
 
 
 def StopOrchestration(orchestration):
-    pass
-
-def testOrchestration(orchestration):
     pass
 
 def LaunchingExample(orchestrationName):

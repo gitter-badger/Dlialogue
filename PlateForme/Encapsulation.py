@@ -1,8 +1,10 @@
 #-*- coding:utf-8 -*-
+from Workers import ServiceWebInput
+
 __author__ = 'baptiste'
 import zmq
 import time
-from ServicesWeb import ServiceWebInput, ServiceWebOutput
+from Workers import ServiceWebOutput
 from threading import Thread
 
 class Kanban :
@@ -13,16 +15,32 @@ class Kanban :
         self.state = ""
         self.idMessage = ""
 
-class Encapsulateur:
-    """Encapsulateur -- abstract"""
+
+class EncapsulatorWithInitiative(Thread):
+
+
     pass
 
-class EncapsulateurLocal(Encapsulateur):
-    """Encapsule une fonction locale"""
-    def __init__(self,contexte, port, worker):
-      self.contexte = contexte
-      socket = contexte.socket(zmq.PAIR)
-      socket.bind("tcp://*:%s" % port)
+class EncapsulatorWithoutInitiative(Thread):
+    def __init__(self, context, hubPort, port, workerAddress):
+        Thread.__init__(self)
+        self.context = context
+        self.listeningSocket = context.socket(zmq.PULL)
+        self.listeningSocket.bind("tcp://127.0.0.1:%s" % port)
+        self.sendingSocket = context.socket(zmq.PUSH)
+        self.sendingSocket.connect("tcp://127.0.0.1:%s" % hubPort)
+        self.workerAddress = workerAddress
+
+    def run(self):
+        print (self.workerAddress + " : Ready to work !")
+        while True:
+            message = self.listeningSocket.recv()
+
+            #to be continued
+
+            self.sendingSocket.send(message)
+        pass
+
     pass
 
 class EncapsulateurExempleInput(Thread):
@@ -63,7 +81,7 @@ class EncapsulateurExempleOutput(Thread):
 
 class Hub(Thread):
     """Hub : Crossroad for the messages between carrefour encapsulators, then between workers. The hub is unique for a
-       given context, then for an orchestration. Its port is 2000."""
+       given context, then for an orchestration."""
 
     def __init__(self,context,orchestration,directory):
         Thread.__init__(self)
