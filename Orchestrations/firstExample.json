@@ -3,29 +3,24 @@
     "initialState": "messageInput",
     "states": {
         "messageInput": {
-            "parallelSubstates": [
-                "Pim",
-                "Pam"
-            ],
+            "parallelSubstates": ["pim", "pam"],
             "ressourcesIn": [],
             "conversionIn": "",
-            "worker": [
-                {
-                    "type": ["initiate","incrementTurn"]
-                },
-                "messageInputExample",
-                "local",
-                "ServiceWebInput.py"
-            ],
+            "worker": {
+                "type": [
+                    "initiate",
+                    "incrementTurn"
+                ],
+                "address": "ServiceWebInput.py"
+            },
             "conversionOut": "",
             "ressourcesOut": [
                 "messageInput"
             ],
-            "transitions": [
+            "transitions":
                 {
                     "true": "messageOutput"
                 }
-            ]
         },
         "messageOutput": {
             "parallelSubstates": [],
@@ -33,23 +28,17 @@
                 "messageInput"
             ],
             "conversionIn": "",
-            "worker": [
-                {
-                    "type": []
-                },
-                "messageOutputExample",
-                "local",
-                "ServiceWebOutput.py"
-            ],
+            "worker":
+            {
+                "type": [],
+                "address": "ServiceWebOutput.py"
+            },
             "conversionOut": "",
-            "ressourcesOut": [
-                ""
-            ],
-            "transitions": [
+            "ressourcesOut": [],
+            "transitions":
                 {
                     "true": "messageInput"
                 }
-            ]
         }
     }
 }

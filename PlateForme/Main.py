@@ -11,12 +11,18 @@ from PlateForme.Encapsulation import EncapsulateurExempleOutput, EncapsulateurEx
 #Local Enconders Management : add/check/modify/delete
 #Orchestrations Launcher : start/stop, threads management
 
+forbiddenPorts = ["8080","80","22"]
 global idDialogueIncrement
-idDialogueIncrement = 0
-orchestrations = {"orchestrationName":"json"}
+idDialogueIncrement = int()
+# orchestrations = {"orchestrationName":"jsonOrchestrationObject"}
+threadsByOrchestration = {"orchestrationName":["threads"]}
 
-directory = {"encapsulationName":"address"}
-forbiddenPorts = ["8080"]
+directory = defaultdict(tuple)
+#directory = {"encapsulator":"port"}
+directory = {('_', 'ServiceWebOutput.py', ''):273}
+print(list(directory.keys()))
+print(list(directory.values()))
+
 
 idDialogueOrchestration = {"idDialogue":"orchestrationName"}
 dialogueStates = {"idDialogue":"state"}
@@ -27,36 +33,65 @@ threads = {"orchestrationName":["thread1","thread2"]}
 blackBoard = {"idDialogue":{"idTurn":{"attribut":"valeur"}}}
 
 def initialization():
-    '''reads folders, finds id max for idDialogueIncrement, checks that '''
-
-    orchestrationName = "firstExample"
-    path = "../Orchestrations/"+orchestrationName+".json"
+    '''reads orc folder, finds id max for idDialogueIncrement. checks that ... ??'''
+    #TODO : automatically get all json files in the Orchestrations folder
+    path = "../Orchestrations/firstExample.json"
     json_data=open(path).read()
     orchestration = json.loads(json_data)
+    orchestrationName = orchestration["orchestrationName"]
     orchestrations.update ({orchestrationName : orchestration})
-    # print(orchestrations[orchestrationName])
+    idDialogueIncrement = 0
 
+def giveNewEncapsulatorsPorts(orchestrationEncapsulatorsDefaultDict):
+    '''Ports not already in the global directory are added to it'''
+     #arbitrary port
+    givenPort = "273"
+    for encapsulator in orchestrationEncapsulatorsDefaultDict :
+        if encapsulator not in directory :
+            while givenPort in list(directory.values) or givenPort in forbiddenPorts:
+                print(givenPort)
+                givenPort+=1
+                print(givenPort)
+            directory[encapsulator] = givenPort
 
-def getOrchestration(orchestrationName):
-    path = "../Orchestrations/"+orchestrationName+".json"
-    json_data=open(path).read()
-    orchestration = json.loads(json_data)
-    return orchestration
-
-def addressPorts(orchestration):
-    if "Hub" not in orchestrations :
-        directory["Hub"] = "273"
-    print (directory["Hub"])
+def createEncapsulatorsDict(orchestration):
+    '''gives this orchestration's encapsulators dict with triplet [conversionIn,address,conversionOut]  and boolean
+    saying if it has initiative'''
+    #s = (["conversionIn","address","conversionOut"],True)
+    encapsulatorsDict = defaultdict(tuple)
+    #with triplet [conversionIn,address,conversionOut]  and boolean saying if it has initiative
     for state in orchestration["states"]:
-            print (state)
-            for substate in orchestration["states"][state]["parallelSubstates"]:
-                print (substate)
+        #the encapsulator tuple (=name) is created here : conversionIn/address/conversionOut
+        workerAddress = orchestration["states"][state]["worker"]["address"]
+        if 1 :
+            conversionIn = "_"
+        else:
+            conversionIn = ""
+        conversionOut = ""
+        encapsulatorTuple = (conversionIn,workerAddress,conversionOut)
+        if 'initiate' in orchestration["states"][state]["worker"]["type"]:
+            encapsulatorsDict[encapsulatorTuple] = True
+        else:
+            encapsulatorsDict[encapsulatorTuple] = False
+            pass
+    return encapsulatorsDict
 
 def StartOrchestration(orchestration):
-    print ("start")
-    listeWorkers
-    pass
+    context = zmq.Context()
+    encapsulatorsDict = createEncapsulatorsDict(orchestration)
+    giveNewEncapsulatorsPorts(encapsulatorsDict)
+    #FR : On crée les threads pour les workers locaux et le hub.
+    print(list(directory.keys()))
+    print(list(directory.values()))
+    threads = {}
+
+    #FR : On démarre les threads en terminant par les 'initiate'.
+
+
 def StopOrchestration(orchestration):
+    pass
+
+def testOrchestration(orchestration):
     pass
 
 def LaunchingExample(orchestrationName):
