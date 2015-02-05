@@ -1,0 +1,106 @@
+{
+    "orchestrationName": "SDS",
+    "initialState": "waitForStart",
+    "states": {
+	"waitForStart": {
+		"ressourcesIn": [],
+		"ressourcesOut": [
+			"start-bang"	
+		],
+		"worker": {
+			"type": [ "initiative" ],
+			"name": "webclient-initdial"	
+		},
+		"transitions": [
+			{"condition": "*", "nextState": "startDialog", "outtype": "start-bang" }
+		]
+	},
+	"startDialog": {
+		"ressourcesIn": [ "start-bang" ],
+		"ressourcesOut": [ "system-action" ],
+		"worker": {
+			"type": [ ],
+			"name": "dman-start"	
+		},
+		"transitions": [
+			{"condition": "*", "nextState": "getNextSystemAction", "outtype": "system-action" }
+		]
+	},
+	"sendSysRespAndWaitForUsrResp": {
+		"ressourcesIn": [
+			"system-response"	
+		],
+		"ressourcesOut": [
+			"asr-hyps",
+			"evaluation"
+		],
+		"worker": {
+			"type": [ ],
+			"name": "webclient-pursue"
+		},
+            	"transitions": [
+			{"condition": "*", "nextState": "processASRHyps", "type": "asr-hyps" },
+			{"condition": "evaluation", "nextState": "stopDialog", "type": "evaluation" }
+		]
+	},
+        "processASRHyps": {
+	      "ressourcesIn": [
+		"asr-hyps"
+	      ],
+	      "ressourcesOut": [
+		"slu-hyps"	
+	      ],
+              "worker": {
+		"type": [],
+                "name": "semi"
+              },
+            "ressourcesOut": [
+                "sem-hyps"
+            ],
+            "transitions": [
+		{"condition": "*", "nextState": "getNextSystemAction", "outtype": "sem-hyps" }
+	    ]
+        },
+        "getNextSystemAction": {
+            "ressourcesIn": [
+                "sem-hyps"
+            ],
+	    "ressourcesOut": [
+		"system-action"	
+	    ],
+            "worker": {
+		"type": [],
+                "name": "dman-pursue"
+            },
+            "transitions": [
+		{"condition": "*", "nextState": "generateSystemResponse", "outtype": "system-action" }
+	    ]
+        },
+	"generateSystemResponse": {
+		"ressourcesIn": [
+			"system-action"
+		],
+	    "ressourcesOut": [
+		"system-response"	
+	    ],
+            "worker": {
+		"type": [],
+                "name": "semo"
+            },
+            "transitions": [
+		{"condition": "*", "nextState": "sendSysRespAndWaitForUsrResp", "outtype": "system-response" }
+	    ]
+	},
+	"stopDialog": {
+		"ressourcesIn": [ "stop-bang" ],
+		"ressourcesOut": [ "system-action" ],
+		"worker": {
+			"type": [ ],
+			"name": "dman-stop"
+		},
+		"transitions": [
+			{"condition": "*", "nextState": "waitForStart" }
+		]
+	}
+    }
+}
