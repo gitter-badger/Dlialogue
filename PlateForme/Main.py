@@ -58,9 +58,7 @@ def giveNewEncapsulatorsPorts(orchestrationEncapsulatorsDefaultDict):
 def createEncapsulatorsDict(orchestration):
     '''gives this orchestration's encapsulators dict with triplet [conversionIn,address,conversionOut]  and boolean
     saying if it has initiative'''
-    #s = (["conversionIn","address","conversionOut"],True)
-    encapsulatorsDict = defaultdict(tuple)
-    #with triplet [conversionIn,address,conversionOut]  and boolean saying if it has initiative
+    encapsulatorsDict = defaultdict(tuple) #with triplet [conversionIn,address,conversionOut]  and boolean saying if it has initiative
     for state in orchestration["states"]:
         #the encapsulator tuple (=name) is created here : conversionIn/address/conversionOut
         workerAddress = orchestration["states"][state]["worker"]["address"]
@@ -87,20 +85,22 @@ def StartOrchestration(orchestration):
 
     #Threads Creation
 
+    directoryV1 = {}
+    directoryV1["hub"]=1
+    directoryV1["semi"]=2
+    directoryV1["semo"]=3
+    directoryV1["dmanStart"]=4
+    directoryV1["dmanUpdate"]=5
+    directoryV1["dmanStop"]=6
+    directoryV1["clientWeb"]=7
     orchestrationThreads = set()
-    semiThread = EncapsulatorWithoutInitiative(context, 1, 2, "semiAddress")
-
-
-    semi
-    semout
-    dman_start
-    dman_update
-    dman_stop
-
-    clientWeb
-
-    EncapsulatorWithoutInitiative()
-    threads = {}
+    hubThread = Hub(context,orchestration,directoryV1)
+    semiThread = EncapsulatorWithoutInitiative(context, directoryV1["hub"], directoryV1["semi"], "semiAddress")
+    semoThread = EncapsulatorWithoutInitiative(context, directoryV1["hub"], directoryV1["semo"], "semoAddress")
+    dmanStartThread = EncapsulatorWithoutInitiative(context, directoryV1["hub"], directoryV1["dmanStart"], "dmanStartAddress")
+    dmanUpdateThread = EncapsulatorWithoutInitiative(context, directoryV1["hub"], directoryV1["dmanUpdate"], "dmanUpdateAddress")
+    dmanStopThread = EncapsulatorWithoutInitiative(context, directoryV1["hub"], directoryV1["dmanStop"], "dmanStopAddress")
+    clientWebThread = EncapsulatorWithInitiative(context, directoryV1["hub"], directoryV1["clientWeb"], "clientWebAddress")
 
     #Threads launching, hub first, initiative last
 

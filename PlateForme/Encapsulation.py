@@ -7,6 +7,7 @@ import time
 from Workers import ServiceWebOutput
 from threading import Thread
 
+
 class Kanban :
     def __init__(self,orchestrationName):
         '''should initiate state thanks to the orchestrationName'''
@@ -39,27 +40,22 @@ class EncapsulatorWithoutInitiative(Thread):
             #to be continued
 
             self.sendingSocket.send(message)
-        pass
 
     pass
 
 class EncapsulateurExempleInput(Thread):
     """Encapsule une fonction input qui pourrait être un service web"""
-
-    def __init__(self,contexte, port):
+    def __init__(self, context, hubPort, port, workerAddress):
         Thread.__init__(self)
-        self.contexte = contexte
-        self.socket = contexte.socket(zmq.PUSH)
-        self.socket.connect("tcp://127.0.0.1:%s" % port)
-        # self.socket.bind("tcp://localhost:%s" % port)
+        self.context = context
+        self.listeningSocket = context.socket(zmq.PULL)
+        self.listeningSocket.bind("tcp://127.0.0.1:%s" % port)
+        self.sendingSocket = context.socket(zmq.PUSH)
+        self.sendingSocket.connect("tcp://127.0.0.1:%s" % hubPort)
+        self.workerAddress = workerAddress
 
     def run(self):
-        print("coucou input")
-        for i in "chaine":
-            message = ServiceWebInput.main()
-            print("Input sending : ", message)
-            self.socket.send(message.encode('utf8'))
-            time.sleep(2)
+        pass
 
 class EncapsulateurExempleOutput(Thread):
     """Encapsule une fonction output qui pourrait être un service web"""
@@ -82,17 +78,17 @@ class EncapsulateurExempleOutput(Thread):
 class Hub(Thread):
     """Hub : Crossroad for the messages between carrefour encapsulators, then between workers. The hub is unique for a
        given context, then for an orchestration."""
-
     def __init__(self,context,orchestration,directory):
         Thread.__init__(self)
-
-        self.orchestration = orchestration #the scxml file
-        self.directory = directory #{} #directory : worker/port
-
+        self.orchestration = orchestration
+        self.directory = directory
         self.context = context
-
         self.universalInputSocket = context.socket(zmq.PULL)
-        self.universalInputSocket.bind("tcp://127.0.0.1:%s" % directory["Exemple-Hub"])
+        self.universalInputSocket.bind("tcp://127.0.0.1:%s" % directory["hub"])
+        for encapsulateur in ["semi", "semo", "demanStart", "dmaUpdate", "dmanStop", "clientWeb"]
+            pass
+
+
         #self.universalInputSocket.bind("127.0.0.1:%s" % self.port)
 
         #temp : just a static unique port accessing an encapsulator
